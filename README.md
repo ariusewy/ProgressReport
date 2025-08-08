@@ -28,7 +28,7 @@ your_project/                     # 本地项目目录
 
 在项目目录下运行：
 ```bash
-curl -s https://raw.githubusercontent.com/yourusername/ProgressReport/main/scripts/init_project.py | python3 - "项目名称" "大项目" "开发目标"
+curl -s https://raw.githubusercontent.com/ariusewy/ProgressReport/main/scripts/init_project.py | python3 - "项目名称" "大项目" "开发目标"
 ```
 
 ### 2. 添加进度
@@ -82,7 +82,7 @@ progress --list
   "parent_project": "隶属大项目",
   "development_goal": "开发目标",
   "project_path": "/path/to/project",
-  "central_repo_url": "https://github.com/yourusername/ProgressReport",
+          "central_repo_url": "https://github.com/ariusewy/ProgressReport",
   "last_sync": "2024-01-16T10:30:00Z",
   "sync_mode": "realtime"
 }

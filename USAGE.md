@@ -27,7 +27,7 @@ your_project/                     # 本地项目目录
 
 ```bash
 # 方式1：使用curl（推荐）
-curl -s https://raw.githubusercontent.com/yourusername/ProgressReport/main/scripts/init_project.py | python3 - "项目名称" "隶属大项目" "开发目标"
+curl -s https://raw.githubusercontent.com/ariusewy/ProgressReport/main/scripts/init_project.py | python3 - "项目名称" "隶属大项目" "开发目标"
 
 # 方式2：直接运行脚本
 python3 scripts/init_project.py "机器学习项目" "AI研究" "实现图像分类算法"
@@ -159,7 +159,7 @@ done
   "parent_project": "隶属大项目",
   "development_goal": "开发目标",
   "project_path": "/path/to/project",
-  "central_repo_url": "https://github.com/yourusername/ProgressReport",
+          "central_repo_url": "https://github.com/ariusewy/ProgressReport",
   "last_sync": "2024-01-16T10:30:00Z",
   "sync_mode": "realtime"
 }

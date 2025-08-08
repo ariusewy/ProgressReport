@@ -24,7 +24,7 @@ def init_project(project_name, parent_project, development_goal):
             "parent_project": parent_project,
             "development_goal": development_goal,
             "project_path": str(Path.cwd()),
-            "central_repo_url": "https://github.com/yourusername/ProgressReport",
+            "central_repo_url": "https://github.com/ariusewy/ProgressReport",
             "last_sync": datetime.now().isoformat(),
             "sync_mode": "realtime"
         }

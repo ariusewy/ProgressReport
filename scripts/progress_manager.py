@@ -19,7 +19,7 @@ import argparse
 class ProgressManager:
     def __init__(self):
         self.config_file = ".progress_config.json"
-        self.central_repo_url = "https://github.com/yourusername/ProgressReport"
+        self.central_repo_url = "https://github.com/ariusewy/ProgressReport"
         self.projects_dir = "projects"
         
     def init_project(self, project_name, parent_project, development_goal):

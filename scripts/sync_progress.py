@@ -17,7 +17,7 @@ import argparse
 class ProgressSync:
     def __init__(self):
         self.config_file = ".progress_config.json"
-        self.central_repo_url = "https://github.com/yourusername/ProgressReport"
+        self.central_repo_url = "https://github.com/ariusewy/ProgressReport"
         self.local_repo_dir = ".progress_repo"
         
     def sync_to_central(self, force=False):
