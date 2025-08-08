@@ -1,0 +1,16 @@
+{
+  "project_name": "instrumentation-based Coverage",
+  "parent_project": "Fuzzing Extension Prject",
+  "development_goal": "基于现有框架分析instrumentation-based Coverage是否可以同步提供更多的coverage metrics便于多维度的反馈集成",
+  "created_date": "2025-08-09",
+  "last_updated": "2025-08-09T03:56:41.200143",
+  "progress_entries": [
+    {
+      "date": "2025-08-09",
+      "time": "03:56",
+      "description": "新增RocketTile benchmark(from DifuzzRTL) 完成instrumentation步骤，可以获取到coverage point分析",
+      "notes": "Testbench现在设计很简单，下一步尝试参考DifuzzRTL进行elf load进行测试",
+      "tags": []
+    }
+  ]
+}
