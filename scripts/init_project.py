@@ -179,14 +179,49 @@ def show_progress():
         print(f"❌ 显示进度失败: {e}")
         return False
 
+def sync_to_github():
+    """同步到GitHub"""
+    try:
+        # 检查是否有独立同步脚本
+        if os.path.exists("standalone_sync.py"):
+            import subprocess
+            result = subprocess.run([sys.executable, "standalone_sync.py", "sync"], capture_output=True, text=True)
+            print(result.stdout)
+            if result.stderr:
+                print(result.stderr)
+            return result.returncode == 0
+        else:
+            print("⚠️ 独立同步脚本不存在，正在下载...")
+            download_standalone_sync()
+            return sync_to_github()
+    except Exception as e:
+        print(f"❌ 同步失败: {e}")
+        return False
+
+def download_standalone_sync():
+    """下载独立同步脚本"""
+    try:
+        import urllib.request
+        url = "https://raw.githubusercontent.com/ariusewy/ProgressReport/main/scripts/standalone_sync.py"
+        urllib.request.urlretrieve(url, "standalone_sync.py")
+        os.chmod("standalone_sync.py", 0o755)
+        print("✅ 独立同步脚本下载成功！")
+        return True
+    except Exception as e:
+        print(f"❌ 下载独立同步脚本失败: {e}")
+        return False
+
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("用法: python progress_update.py <进度描述> [附注]")
         print("      python progress_update.py --show")
+        print("      python progress_update.py --sync")
         sys.exit(1)
     
     if sys.argv[1] == "--show":
         show_progress()
+    elif sys.argv[1] == "--sync":
+        sync_to_github()
     else:
         description = sys.argv[1]
         notes = sys.argv[2] if len(sys.argv) > 2 else ""
@@ -198,6 +233,23 @@ if __name__ == "__main__":
     
     # 设置执行权限
     os.chmod("progress_update.py", 0o755)
+    
+    # 下载独立同步脚本
+    download_standalone_sync()
+
+def download_standalone_sync():
+    """下载独立同步脚本"""
+    try:
+        import urllib.request
+        url = "https://raw.githubusercontent.com/ariusewy/ProgressReport/main/scripts/standalone_sync.py"
+        urllib.request.urlretrieve(url, "standalone_sync.py")
+        os.chmod("standalone_sync.py", 0o755)
+        print("✅ 独立同步脚本下载成功！")
+        return True
+    except Exception as e:
+        print(f"⚠️ 下载独立同步脚本失败: {e}")
+        print("💡 你可以稍后手动下载: https://raw.githubusercontent.com/ariusewy/ProgressReport/main/scripts/standalone_sync.py")
+        return False
 
 def main():
     if len(sys.argv) != 4:
