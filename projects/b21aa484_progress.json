@@ -1,0 +1,44 @@
+{
+  "project_name": "NOVIA项目",
+  "parent_project": "工具链开发",
+  "development_goal": "构建RISC-V工具链和NFU前端",
+  "created_date": "2025-08-09",
+  "last_updated": "2025-08-09T02:51:06.505449",
+  "progress_entries": [
+    {
+      "date": "2025-08-09",
+      "time": "02:50",
+      "description": "完成了项目初始化",
+      "notes": "成功设置了RISC-V工具链开发环境",
+      "tags": []
+    },
+    {
+      "date": "2025-08-09",
+      "time": "02:50",
+      "description": "完成了LLVM项目编译",
+      "notes": "LLVM 15.0.0编译成功，支持RISC-V后端",
+      "tags": []
+    },
+    {
+      "date": "2025-08-09",
+      "time": "02:50",
+      "description": "实现了NFU前端",
+      "notes": "完成了NFU指令集的前端实现，支持load/exec/pop操作",
+      "tags": []
+    },
+    {
+      "date": "2025-08-09",
+      "time": "02:50",
+      "description": "--sync",
+      "notes": "",
+      "tags": []
+    },
+    {
+      "date": "2025-08-09",
+      "time": "02:51",
+      "description": "--help",
+      "notes": "",
+      "tags": []
+    }
+  ]
+}
