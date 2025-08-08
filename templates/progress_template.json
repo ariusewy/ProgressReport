@@ -1,0 +1,23 @@
+{
+  "project_name": "项目名称",
+  "parent_project": "隶属大项目",
+  "development_goal": "开发目标",
+  "created_date": "2024-01-15",
+  "last_updated": "2024-01-16T10:30:00Z",
+  "progress_entries": [
+    {
+      "date": "2024-01-15",
+      "time": "14:30",
+      "description": "完成了项目初始化，搭建了基础框架",
+      "notes": "遇到了一些依赖问题，已解决",
+      "tags": ["初始化", "框架搭建"]
+    },
+    {
+      "date": "2024-01-16",
+      "time": "09:15",
+      "description": "实现了核心功能模块A",
+      "notes": "性能优化待完成",
+      "tags": ["功能开发", "模块A"]
+    }
+  ]
+}

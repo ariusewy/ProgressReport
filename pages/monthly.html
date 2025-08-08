@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang="monthly_view_title">月视图 - 个人项目进度管理系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .header {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .header h1 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        
+        .month-navigation {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .month-nav-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+        
+        .month-nav-btn:hover {
+            background: #5a6fd8;
+        }
+        
+        .current-month {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            min-width: 150px;
+            text-align: center;
+        }
+        
+        .month-calendar {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .month-header {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            background: #667eea;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .month-day-header {
+            padding: 1rem;
+            text-align: center;
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .month-day-header:last-child {
+            border-right: none;
+        }
+        
+        .month-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+        }
+        
+        .month-day {
+            min-height: 120px;
+            border-right: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+            padding: 0.5rem;
+            position: relative;
+        }
+        
+        .month-day:last-child {
+            border-right: none;
+        }
+        
+        .month-day:nth-child(7n) {
+            border-bottom: none;
+        }
+        
+        .month-day.other-month {
+            background: #f8f9fa;
+            color: #999;
+        }
+        
+        .month-day.today {
+            background: #e3f2fd;
+        }
+        
+        .day-number {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        
+        .day-progress {
+            font-size: 0.8rem;
+        }
+        
+        .progress-indicator {
+            background: #667eea;
+            color: white;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            margin-bottom: 0.2rem;
+            font-size: 0.7rem;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1rem;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        
+        .language-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 8px;
+            z-index: 1000;
+        }
+        
+        .language-switcher button {
+            background: none;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin: 0 2px;
+        }
+        
+        .language-switcher button.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .language-switcher button:hover {
+            background: #f0f0f0;
+        }
+        
+        .language-switcher button.active:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+    </style>
+</head>
+<body>
+    <!-- 语言切换器 -->
+    <div class="language-switcher">
+        <button onclick="switchLanguage('zh')" class="active">中文</button>
+        <button onclick="switchLanguage('en')">English</button>
+    </div>
+    
+    <div class="container">
+        <a href="index.html" class="back-link" data-lang="back_to_home">← 返回主页</a>
+        
+        <div class="header">
+            <h1 data-lang="monthly_view_title">📅 月视图</h1>
+            <p data-lang="monthly_view_subtitle">查看指定月的项目进度</p>
+        </div>
+        
+        <div class="month-navigation">
+            <button class="month-nav-btn" onclick="changeMonth(-1)">← 上个月</button>
+            <div class="current-month" id="currentMonth">2025年08月</div>
+            <button class="month-nav-btn" onclick="changeMonth(1)">下个月 →</button>
+        </div>
+        
+        <div class="month-calendar">
+            <div class="month-header">
+                <div class="month-day-header">周一</div>
+                <div class="month-day-header">周二</div>
+                <div class="month-day-header">周三</div>
+                <div class="month-day-header">周四</div>
+                <div class="month-day-header">周五</div>
+                <div class="month-day-header">周六</div>
+                <div class="month-day-header">周日</div>
+            </div>
+            <div class="month-days" id="monthDays">
+
+                <div class="month-day other-month">
+                    <div class="day-number"></div>
+                </div>
+
+                <div class="month-day other-month">
+                    <div class="day-number"></div>
+                </div>
+
+                <div class="month-day other-month">
+                    <div class="day-number"></div>
+                </div>
+
+                <div class="month-day other-month">
+                    <div class="day-number"></div>
+                </div>
+
+                <div class="month-day">
+                    <div class="day-number">1</div>
+                    <div class="day-progress">
+
+                    </div>
+                </div>
+
+                <div class="month-day">
+                    <div class="day-number">2</div>
+                    <div class="day-progress">
+
+                    </div>
+                </div>
+
+                <div class="month-day">
+                    <div class="day-number">3</div>
+                    <div class="day-progress">
+
+                    </div>
+                </div>
+
+                <div class="month-day">
+                    <div class="day-number">4</div>
+                    <div class="day-progress">
+
+                    </div>
+                </div>
+
+                <div class="month-day">
+                    <div class="day-number">5</div>
+                    <div class="day-progress">
+
+                    </div>
+                </div>
+
+                <div class="month-day">
+                    <div class="day-number">6</div>
+                    <div class="day-progress">
+
+                    </div>
+                </div>
+
+                <div class="month-day">
+                    <div class="day-number">7</div>
+                    <div class="day-progress">
+
+                    </div>
+                </div>
+
+                <div class="month-day">
+                    <div class="day-number">8</div>
+                    <div class="day-progress">
+
+                        <div class="progress-indicator" title="Web应用开发: 完成了项目架构设计">
+                            Web应用开发...
+                        </div>
+
+                        <div class="progress-indicator" title="机器学习项目: 完成了项目初始化">
+                            机器学习项目...
+                        </div>
+
+                        <div class="progress-indicator" title="机器学习项目: 实现了数据预处理模块">
+                            机器学习项目...
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="month-day today">
+                    <div class="day-number">9</div>
+                    <div class="day-progress">
+
+                    </div>
+                </div>
+
+                <div class="month-day">
+                    <div class="day-number">10</div>
+                    <div class="day-progress">
+
+                    </div>
+                </div>
+
+                <div class="month-day">
+                    <div class="day-number">11</div>
+                    <div class="day-progress">
+
+                    </div>
+                </div>
+
+                <div class="month-day">
+                    <div class="day-number">12</div>
+                    <div class="day-progress">
+
+                    </div>
+                </div>
+
+                <div class="month-day">
+                    <div class="day-number">13</div>
+                    <div class="day-progress">
+
+                    </div>
+                </div>
+
+                <div class="month-day">
+                    <div class="day-number">14</div>
+                    <div class="day-progress">
+
+                    </div>
+                </div>
+
+                <div class="month-day">
+                    <div class="day-number">15</div>
+                    <div class="day-progress">
+
+                    </div>
+                </div>
+
+                <div class="month-day">
+                    <div class="day-number">16</div>
+                    <div class="day-progress">
+
+                    </div>
+                </div>
+
+                <div class="month-day">
+                    <div class="day-number">17</div>
+                    <div class="day-progress">
+
+                    </div>
+                </div>
+
+                <div class="month-day">
+                    <div class="day-number">18</div>
+                    <div class="day-progress">
+
+                    </div>
+                </div>
+
+                <div class="month-day">
+                    <div class="day-number">19</div>
+                    <div class="day-progress">
+
+                    </div>
+                </div>
+
+                <div class="month-day">
+                    <div class="day-number">20</div>
+                    <div class="day-progress">
+
+                    </div>
+                </div>
+
+                <div class="month-day">
+                    <div class="day-number">21</div>
+                    <div class="day-progress">
+
+                    </div>
+                </div>
+
+                <div class="month-day">
+                    <div class="day-number">22</div>
+                    <div class="day-progress">
+
+                    </div>
+                </div>
+
+                <div class="month-day">
+                    <div class="day-number">23</div>
+                    <div class="day-progress">
+
+                    </div>
+                </div>
+
+                <div class="month-day">
+                    <div class="day-number">24</div>
+                    <div class="day-progress">
+
+                    </div>
+                </div>
+
+                <div class="month-day">
+                    <div class="day-number">25</div>
+                    <div class="day-progress">
+
+                    </div>
+                </div>
+
+                <div class="month-day">
+                    <div class="day-number">26</div>
+                    <div class="day-progress">
+
+                    </div>
+                </div>
+
+                <div class="month-day">
+                    <div class="day-number">27</div>
+                    <div class="day-progress">
+
+                    </div>
+                </div>
+
+                <div class="month-day">
+                    <div class="day-number">28</div>
+                    <div class="day-progress">
+
+                    </div>
+                </div>
+
+                <div class="month-day">
+                    <div class="day-number">29</div>
+                    <div class="day-progress">
+
+                    </div>
+                </div>
+
+                <div class="month-day">
+                    <div class="day-number">30</div>
+                    <div class="day-progress">
+
+                    </div>
+                </div>
+
+                <div class="month-day">
+                    <div class="day-number">31</div>
+                    <div class="day-progress">
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let currentMonth = new Date('2025-08-01');
+        
+        function changeMonth(months) {
+            currentMonth.setMonth(currentMonth.getMonth() + months);
+            updateMonthDisplay();
+            loadMonthProgress();
+        }
+        
+        function updateMonthDisplay() {
+            const year = currentMonth.getFullYear();
+            const month = currentMonth.getMonth() + 1;
+            document.getElementById('currentMonth').textContent = `${year}年${month.toString().padStart(2, '0')}月`;
+        }
+        
+        function loadMonthProgress() {
+            const year = currentMonth.getFullYear();
+            const month = currentMonth.getMonth() + 1;
+            const monthStr = `${year}-${month.toString().padStart(2, '0')}`;
+            window.history.pushState({}, '', `?month=${monthStr}`);
+        }
+        
+        window.addEventListener('load', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const monthParam = urlParams.get('month');
+            if (monthParam) {
+                currentMonth = new Date(monthParam + '-01');
+                updateMonthDisplay();
+            }
+        });
+    </script>
+    
+    
+        <script>
+        // 语言切换功能
+        let currentLang = localStorage.getItem('language') || 'zh';
+        
+        function switchLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('language', lang);
+            updatePageLanguage();
+        }
+        
+        function updatePageLanguage() {
+            const elements = document.querySelectorAll('[data-lang]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-lang');
+                const translations = {
+                    'zh': {
+                        'title': '个人项目进度管理系统',
+                        'subtitle': '管理你的研究项目进度，追踪开发历程',
+                        'home': '🏠 主页',
+                        'timeline': '📅 时间线',
+                        'projects': '📁 项目列表',
+                        'daily_view': '📅 日视图',
+                        'weekly_view': '📅 周视图',
+                        'monthly_view': '📅 月视图',
+                        'active_projects': '活跃项目',
+                        'total_entries': '总进度条目',
+                        'project_categories': '大项目分类',
+                        'back_to_home': '← 返回主页',
+                        'project_list_title': '📁 项目列表',
+                        'project_list_subtitle': '查看所有项目的详细信息和进度',
+                        'timeline_title': '📅 项目进度时间线',
+                        'timeline_subtitle': '按时间顺序查看所有项目进度',
+                        'daily_view_title': '📅 日视图',
+                        'daily_view_subtitle': '查看指定日期的项目进度',
+                        'weekly_view_title': '📅 周视图',
+                        'weekly_view_subtitle': '查看指定周的项目进度',
+                        'monthly_view_title': '📅 月视图',
+                        'monthly_view_subtitle': '查看指定月的项目进度',
+                        'no_projects': '📭 暂无项目',
+                        'no_projects_desc': '还没有创建任何项目，请先初始化一个项目。',
+                        'no_progress': '暂无进度记录',
+                        'progress_entries': '进度条目',
+                        'created_date': '创建日期',
+                        'parent_project': '隶属大项目',
+                        'development_goal': '开发目标',
+                        'last_updated': '最后更新',
+                        'progress_records': '进度记录',
+                        'date': '日期',
+                        'time': '时间',
+                        'description': '描述',
+                        'notes': '附注',
+                        'today': '今天',
+                        'yesterday': '昨天',
+                        'tomorrow': '明天',
+                        'previous': '上一',
+                        'next': '下一',
+                        'week': '周',
+                        'month': '月',
+                        'year': '年'
+                    },
+                    'en': {
+                        'title': 'Personal Project Progress Management System',
+                        'subtitle': 'Manage your research project progress and track development history',
+                        'home': '🏠 Home',
+                        'timeline': '📅 Timeline',
+                        'projects': '📁 Projects',
+                        'daily_view': '📅 Daily View',
+                        'weekly_view': '📅 Weekly View',
+                        'monthly_view': '📅 Monthly View',
+                        'active_projects': 'Active Projects',
+                        'total_entries': 'Total Progress Entries',
+                        'project_categories': 'Project Categories',
+                        'back_to_home': '← Back to Home',
+                        'project_list_title': '📁 Project List',
+                        'project_list_subtitle': 'View detailed information and progress of all projects',
+                        'timeline_title': '📅 Project Progress Timeline',
+                        'timeline_subtitle': 'View all project progress in chronological order',
+                        'daily_view_title': '📅 Daily View',
+                        'daily_view_subtitle': 'View project progress for a specific date',
+                        'weekly_view_title': '📅 Weekly View',
+                        'weekly_view_subtitle': 'View project progress for a specific week',
+                        'monthly_view_title': '📅 Monthly View',
+                        'monthly_view_subtitle': 'View project progress for a specific month',
+                        'no_projects': '📭 No Projects',
+                        'no_projects_desc': 'No projects have been created yet. Please initialize a project first.',
+                        'no_progress': 'No progress records',
+                        'progress_entries': 'Progress Entries',
+                        'created_date': 'Created Date',
+                        'parent_project': 'Parent Project',
+                        'development_goal': 'Development Goal',
+                        'last_updated': 'Last Updated',
+                        'progress_records': 'Progress Records',
+                        'date': 'Date',
+                        'time': 'Time',
+                        'description': 'Description',
+                        'notes': 'Notes',
+                        'today': 'Today',
+                        'yesterday': 'Yesterday',
+                        'tomorrow': 'Tomorrow',
+                        'previous': 'Previous',
+                        'next': 'Next',
+                        'week': 'Week',
+                        'month': 'Month',
+                        'year': 'Year'
+                    }
+                };
+                
+                if (translations[currentLang] && translations[currentLang][key]) {
+                    element.textContent = translations[currentLang][key];
+                }
+            });
+            
+            // 更新语言切换器状态
+            const buttons = document.querySelectorAll('.language-switcher button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+                if (button.textContent.includes('中文') && currentLang === 'zh') {
+                    button.classList.add('active');
+                } else if (button.textContent.includes('English') && currentLang === 'en') {
+                    button.classList.add('active');
+                }
+            });
+        }
+        
+        // 页面加载时应用语言设置
+        document.addEventListener('DOMContentLoaded', function() {
+            updatePageLanguage();
+        });
+        </script>
+        
+</body>
+</html>

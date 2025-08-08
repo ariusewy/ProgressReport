@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang="weekly_view_title">周视图 - 个人项目进度管理系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .header {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .header h1 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        
+        .week-navigation {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .week-nav-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+        
+        .week-nav-btn:hover {
+            background: #5a6fd8;
+        }
+        
+        .current-week {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            min-width: 200px;
+            text-align: center;
+        }
+        
+        .week-calendar {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .week-header {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            background: #667eea;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .week-day-header {
+            padding: 1rem;
+            text-align: center;
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .week-day-header:last-child {
+            border-right: none;
+        }
+        
+        .week-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+        }
+        
+        .week-day {
+            min-height: 200px;
+            border-right: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+            padding: 1rem;
+        }
+        
+        .week-day:last-child {
+            border-right: none;
+        }
+        
+        .week-day:nth-child(7n) {
+            border-bottom: none;
+        }
+        
+        .day-date {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+        
+        .day-progress {
+            font-size: 0.9rem;
+        }
+        
+        .progress-entry {
+            background: #f8f9fa;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            border-radius: 3px;
+            border-left: 3px solid #667eea;
+        }
+        
+        .progress-entry:last-child {
+            margin-bottom: 0;
+        }
+        
+        .progress-time {
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        .progress-project {
+            font-weight: 500;
+            margin: 0.25rem 0;
+        }
+        
+        .progress-description {
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1rem;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        
+        .language-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 8px;
+            z-index: 1000;
+        }
+        
+        .language-switcher button {
+            background: none;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin: 0 2px;
+        }
+        
+        .language-switcher button.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .language-switcher button:hover {
+            background: #f0f0f0;
+        }
+        
+        .language-switcher button.active:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+    </style>
+</head>
+<body>
+    <!-- 语言切换器 -->
+    <div class="language-switcher">
+        <button onclick="switchLanguage('zh')" class="active">中文</button>
+        <button onclick="switchLanguage('en')">English</button>
+    </div>
+    
+    <div class="container">
+        <a href="index.html" class="back-link" data-lang="back_to_home">← 返回主页</a>
+        
+        <div class="header">
+            <h1 data-lang="weekly_view_title">📅 周视图</h1>
+            <p data-lang="weekly_view_subtitle">查看指定周的项目进度</p>
+        </div>
+        
+        <div class="week-navigation">
+            <button class="week-nav-btn" onclick="changeWeek(-1)">← 上一周</button>
+            <div class="current-week" id="currentWeek">2025-08-04 至 2025-08-10</div>
+            <button class="week-nav-btn" onclick="changeWeek(1)">下一周 →</button>
+        </div>
+        
+        <div class="week-calendar">
+            <div class="week-header">
+                <div class="week-day-header">周一</div>
+                <div class="week-day-header">周二</div>
+                <div class="week-day-header">周三</div>
+                <div class="week-day-header">周四</div>
+                <div class="week-day-header">周五</div>
+                <div class="week-day-header">周六</div>
+                <div class="week-day-header">周日</div>
+            </div>
+            <div class="week-days" id="weekDays">
+
+                <div class="week-day">
+                    <div class="day-date">周一 08-04</div>
+                    <div class="day-progress">
+
+                        <div class="progress-entry">
+                            <div class="progress-description">暂无进度</div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="week-day">
+                    <div class="day-date">周二 08-05</div>
+                    <div class="day-progress">
+
+                        <div class="progress-entry">
+                            <div class="progress-description">暂无进度</div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="week-day">
+                    <div class="day-date">周三 08-06</div>
+                    <div class="day-progress">
+
+                        <div class="progress-entry">
+                            <div class="progress-description">暂无进度</div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="week-day">
+                    <div class="day-date">周四 08-07</div>
+                    <div class="day-progress">
+
+                        <div class="progress-entry">
+                            <div class="progress-description">暂无进度</div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="week-day">
+                    <div class="day-date">周五 08-08</div>
+                    <div class="day-progress">
+
+                        <div class="progress-entry">
+                            <div class="progress-time">23:07</div>
+                            <div class="progress-project">Web应用开发</div>
+                            <div class="progress-description">完成了项目架构设计</div>
+                        </div>
+
+                        <div class="progress-entry">
+                            <div class="progress-time">23:07</div>
+                            <div class="progress-project">机器学习项目</div>
+                            <div class="progress-description">完成了项目初始化</div>
+                        </div>
+
+                        <div class="progress-entry">
+                            <div class="progress-time">23:07</div>
+                            <div class="progress-project">机器学习项目</div>
+                            <div class="progress-description">实现了数据预处理模块</div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="week-day">
+                    <div class="day-date">周六 08-09</div>
+                    <div class="day-progress">
+
+                        <div class="progress-entry">
+                            <div class="progress-description">暂无进度</div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="week-day">
+                    <div class="day-date">周日 08-10</div>
+                    <div class="day-progress">
+
+                        <div class="progress-entry">
+                            <div class="progress-description">暂无进度</div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let currentWeekStart = new Date('2025-08-04');
+        
+        function changeWeek(weeks) {
+            currentWeekStart.setDate(currentWeekStart.getDate() + (weeks * 7));
+            updateWeekDisplay();
+            loadWeekProgress();
+        }
+        
+        function updateWeekDisplay() {
+            const endOfWeek = new Date(currentWeekStart);
+            endOfWeek.setDate(endOfWeek.getDate() + 6);
+            
+            const startStr = currentWeekStart.toISOString().split('T')[0];
+            const endStr = endOfWeek.toISOString().split('T')[0];
+            
+            document.getElementById('currentWeek').textContent = `${startStr} 至 ${endStr}`;
+        }
+        
+        function loadWeekProgress() {
+            const startStr = currentWeekStart.toISOString().split('T')[0];
+            window.history.pushState({}, '', `?week=${startStr}`);
+        }
+        
+        window.addEventListener('load', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const weekParam = urlParams.get('week');
+            if (weekParam) {
+                currentWeekStart = new Date(weekParam);
+                updateWeekDisplay();
+            }
+        });
+    </script>
+    
+    
+        <script>
+        // 语言切换功能
+        let currentLang = localStorage.getItem('language') || 'zh';
+        
+        function switchLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('language', lang);
+            updatePageLanguage();
+        }
+        
+        function updatePageLanguage() {
+            const elements = document.querySelectorAll('[data-lang]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-lang');
+                const translations = {
+                    'zh': {
+                        'title': '个人项目进度管理系统',
+                        'subtitle': '管理你的研究项目进度，追踪开发历程',
+                        'home': '🏠 主页',
+                        'timeline': '📅 时间线',
+                        'projects': '📁 项目列表',
+                        'daily_view': '📅 日视图',
+                        'weekly_view': '📅 周视图',
+                        'monthly_view': '📅 月视图',
+                        'active_projects': '活跃项目',
+                        'total_entries': '总进度条目',
+                        'project_categories': '大项目分类',
+                        'back_to_home': '← 返回主页',
+                        'project_list_title': '📁 项目列表',
+                        'project_list_subtitle': '查看所有项目的详细信息和进度',
+                        'timeline_title': '📅 项目进度时间线',
+                        'timeline_subtitle': '按时间顺序查看所有项目进度',
+                        'daily_view_title': '📅 日视图',
+                        'daily_view_subtitle': '查看指定日期的项目进度',
+                        'weekly_view_title': '📅 周视图',
+                        'weekly_view_subtitle': '查看指定周的项目进度',
+                        'monthly_view_title': '📅 月视图',
+                        'monthly_view_subtitle': '查看指定月的项目进度',
+                        'no_projects': '📭 暂无项目',
+                        'no_projects_desc': '还没有创建任何项目，请先初始化一个项目。',
+                        'no_progress': '暂无进度记录',
+                        'progress_entries': '进度条目',
+                        'created_date': '创建日期',
+                        'parent_project': '隶属大项目',
+                        'development_goal': '开发目标',
+                        'last_updated': '最后更新',
+                        'progress_records': '进度记录',
+                        'date': '日期',
+                        'time': '时间',
+                        'description': '描述',
+                        'notes': '附注',
+                        'today': '今天',
+                        'yesterday': '昨天',
+                        'tomorrow': '明天',
+                        'previous': '上一',
+                        'next': '下一',
+                        'week': '周',
+                        'month': '月',
+                        'year': '年'
+                    },
+                    'en': {
+                        'title': 'Personal Project Progress Management System',
+                        'subtitle': 'Manage your research project progress and track development history',
+                        'home': '🏠 Home',
+                        'timeline': '📅 Timeline',
+                        'projects': '📁 Projects',
+                        'daily_view': '📅 Daily View',
+                        'weekly_view': '📅 Weekly View',
+                        'monthly_view': '📅 Monthly View',
+                        'active_projects': 'Active Projects',
+                        'total_entries': 'Total Progress Entries',
+                        'project_categories': 'Project Categories',
+                        'back_to_home': '← Back to Home',
+                        'project_list_title': '📁 Project List',
+                        'project_list_subtitle': 'View detailed information and progress of all projects',
+                        'timeline_title': '📅 Project Progress Timeline',
+                        'timeline_subtitle': 'View all project progress in chronological order',
+                        'daily_view_title': '📅 Daily View',
+                        'daily_view_subtitle': 'View project progress for a specific date',
+                        'weekly_view_title': '📅 Weekly View',
+                        'weekly_view_subtitle': 'View project progress for a specific week',
+                        'monthly_view_title': '📅 Monthly View',
+                        'monthly_view_subtitle': 'View project progress for a specific month',
+                        'no_projects': '📭 No Projects',
+                        'no_projects_desc': 'No projects have been created yet. Please initialize a project first.',
+                        'no_progress': 'No progress records',
+                        'progress_entries': 'Progress Entries',
+                        'created_date': 'Created Date',
+                        'parent_project': 'Parent Project',
+                        'development_goal': 'Development Goal',
+                        'last_updated': 'Last Updated',
+                        'progress_records': 'Progress Records',
+                        'date': 'Date',
+                        'time': 'Time',
+                        'description': 'Description',
+                        'notes': 'Notes',
+                        'today': 'Today',
+                        'yesterday': 'Yesterday',
+                        'tomorrow': 'Tomorrow',
+                        'previous': 'Previous',
+                        'next': 'Next',
+                        'week': 'Week',
+                        'month': 'Month',
+                        'year': 'Year'
+                    }
+                };
+                
+                if (translations[currentLang] && translations[currentLang][key]) {
+                    element.textContent = translations[currentLang][key];
+                }
+            });
+            
+            // 更新语言切换器状态
+            const buttons = document.querySelectorAll('.language-switcher button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+                if (button.textContent.includes('中文') && currentLang === 'zh') {
+                    button.classList.add('active');
+                } else if (button.textContent.includes('English') && currentLang === 'en') {
+                    button.classList.add('active');
+                }
+            });
+        }
+        
+        // 页面加载时应用语言设置
+        document.addEventListener('DOMContentLoaded', function() {
+            updatePageLanguage();
+        });
+        </script>
+        
+</body>
+</html>
