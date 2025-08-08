@@ -184,31 +184,17 @@
         
         <div class="date-navigation">
             <button class="date-nav-btn" onclick="changeDate(-1)">← 前一天</button>
-            <div class="current-date" id="currentDate">2025-08-08</div>
+            <div class="current-date" id="currentDate">2024-08-09</div>
             <button class="date-nav-btn" onclick="changeDate(1)">后一天 →</button>
         </div>
         
         <div class="daily-progress" id="dailyProgress">
 
             <div class="progress-item">
-                <div class="progress-time">23:07</div>
-                <div class="progress-project">Web应用开发 (前端项目)</div>
-                <div class="progress-description">完成了项目架构设计</div>
-                <div class="progress-notes">使用React + TypeScript</div>
-            </div>
-
-            <div class="progress-item">
-                <div class="progress-time">23:07</div>
-                <div class="progress-project">机器学习项目 (AI研究)</div>
-                <div class="progress-description">完成了项目初始化</div>
-                <div class="progress-notes">搭建了基础框架</div>
-            </div>
-
-            <div class="progress-item">
-                <div class="progress-time">23:07</div>
-                <div class="progress-project">机器学习项目 (AI研究)</div>
-                <div class="progress-description">实现了数据预处理模块</div>
-                <div class="progress-notes">支持多种数据格式</div>
+                <div class="progress-time">03:30</div>
+                <div class="progress-project">DemoProj (演示项目)</div>
+                <div class="progress-description">创建DemoProj项目</div>
+                <div class="progress-notes">用于演示项目进度管理系统的各项功能</div>
             </div>
 
         </div>
@@ -216,8 +202,8 @@
     
     <script>
         // 获取所有可用的日期
-        const availableDates = ['2025-08-08'];
-        let currentDate = new Date('2025-08-08');
+        const availableDates = ['2024-08-09'];
+        let currentDate = new Date('2024-08-09');
         
         function changeDate(days) {
             currentDate.setDate(currentDate.getDate() + days);
