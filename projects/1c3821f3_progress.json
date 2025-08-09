@@ -3,13 +3,20 @@
   "parent_project": "Auto ISA Extension Project",
   "development_goal": "基于NOVIA的LLVM Pass获取加速器候选并集成后端RISCV elf生成，便于集成Gem5进行baseline 分析",
   "created_date": "2025-08-09",
-  "last_updated": "2025-08-09T03:41:59.532113",
+  "last_updated": "2025-08-10T04:39:42.179337",
   "progress_entries": [
     {
       "date": "2025-08-09",
       "time": "03:41",
       "description": "手动修改跑通LLVM前端;后端link生成RISCV binary使用Spike pk仿真成功",
       "notes": "主要问题:clang++生成IR仍然会绑定ISA,x86和riscv IR BBs步对应  TODO:自动化BB对齐",
+      "tags": []
+    },
+    {
+      "date": "2025-08-10",
+      "time": "04:39",
+      "description": "手动生成的RISCV binary: incremental_riscv_novia.bin使用Gem5仿真成功",
+      "notes": "下一步尝试使用Pipeline Viewer观察优化机会,以及解决BBid不对齐的问题",
       "tags": []
     }
   ]
