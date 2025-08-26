@@ -3,7 +3,7 @@
   "parent_project": "Auto ISA Extension Project",
   "development_goal": "基于NOVIA的LLVM Pass获取加速器候选并集成后端RISCV elf生成，便于集成Gem5进行baseline 分析",
   "created_date": "2025-08-09",
-  "last_updated": "2025-08-11T02:30:11.732940",
+  "last_updated": "2025-08-14T14:17:10.111404",
   "progress_entries": [
     {
       "date": "2025-08-09",
@@ -24,6 +24,13 @@
       "time": "02:30",
       "description": "明确BB不对齐来自库函数的影响,标准库在不同的后端实现不一致,main函数本身的BBID是一致的",
       "notes": "下一步先忽略库函数调用的影响,主要关注main函数,查看benchmark决定通过不调用还是LLVM Pass来实现",
+      "tags": []
+    },
+    {
+      "date": "2025-08-14",
+      "time": "14:17",
+      "description": "增加了自定义的rename pass,集成后端流程",
+      "notes": "但是崩溃地发现ICS2025有一篇思路相似的Paper！！！！！！！！！",
       "tags": []
     }
   ]
