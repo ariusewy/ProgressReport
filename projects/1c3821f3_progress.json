@@ -3,7 +3,7 @@
   "parent_project": "Auto ISA Extension Project",
   "development_goal": "基于NOVIA的LLVM Pass获取加速器候选并集成后端RISCV elf生成，便于集成Gem5进行baseline 分析",
   "created_date": "2025-08-09",
-  "last_updated": "2025-08-28T01:58:42.162480",
+  "last_updated": "2025-08-29T01:56:34.558261",
   "progress_entries": [
     {
       "date": "2025-08-09",
@@ -38,6 +38,13 @@
       "time": "01:58",
       "description": "集成BB id 对齐自动化生成inline和拓展指令bc的流程",
       "notes": "pop_nfu报错,需要定位LLVM后端的问题",
+      "tags": []
+    },
+    {
+      "date": "2025-08-29",
+      "time": "01:56",
+      "description": "Fix LLVM 后端,可以成功生成汇编代码",
+      "notes": "但是set_load_nfu和exec_nfu之间没有显式依赖关系,中间操作数准备会被后端作为死代码优化",
       "tags": []
     }
   ]
