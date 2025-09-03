@@ -3,13 +3,20 @@
   "parent_project": "Auto ISA Extension Project",
   "development_goal": "Build and test RISCV Extension Support for riscv-toolchain,qemu,spike and gem5",
   "created_date": "2025-08-30",
-  "last_updated": "2025-08-30T19:53:43.648954",
+  "last_updated": "2025-09-03T07:38:24.214911",
   "progress_entries": [
     {
       "date": "2025-08-30",
       "time": "19:53",
       "description": "测试成功riscv-tool-chain和qemu添加扩展指令的流程,测试了R Type和 J Type的指令",
       "notes": "- 对于J type的指令,还需要Qemu还存在bug,无法解析出地址;   - TODO：支持Gem5的新Function Unit",
+      "tags": []
+    },
+    {
+      "date": "2025-09-03",
+      "time": "07:38",
+      "description": "gem5 extension support in Minor and O3 Core",
+      "notes": "Latency by manually defined",
       "tags": []
     }
   ]
